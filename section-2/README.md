@@ -22,7 +22,7 @@ Updated `nginx.conf` to use the correct port:
 
     proxy_pass http://web:3000;
 
-Then restarted the environment:
+Then restart the environment:
 
     docker compose down
     docker compose up --build
