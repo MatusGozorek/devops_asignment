@@ -1,13 +1,13 @@
 Section 2 – Task A: Troubleshooting – 502 Bad Gateway (Nginx + Node.js)
 ----------------------------------------------------------------------
 
-Scenario
---------
+## Scenario
+
 An application is running in Docker using NGINX as a reverse proxy for a Node.js backend.
 When accessing the application via NGINX, users encounter a 502 Bad Gateway error.
 This indicates that NGINX was unable to connect to the upstream app server.
 
-Root Cause
+## Root Cause
 ----------
 After investigating the configuration i found the issue in `nginx.conf`, where:
 
@@ -16,7 +16,7 @@ After investigating the configuration i found the issue in `nginx.conf`, where:
 It was pointing to port 8080 while the Node.js app was actually listening on port 3000.
 This mismatch led to a connection failure between NGINX and the backend container.
 
-Fix Applied
+## Fix Applied
 -----------
 Updated `nginx.conf` to use the correct port:
 
@@ -29,10 +29,14 @@ Then restart the environment:
 
 After the fix, accessing http://localhost should return the expected response from the backend.
 
+
 Prevention Strategies
 ---------------------
+Here are some prevention strategies we might consider implementing.
 
-1. Add Healthchecks (Docker)
+
+
+### 1. Add Healthchecks (Docker)
 ----------------------------
 Using Docker Compose healthchecks ensures the app is up before NGINX starts proxying:
 
@@ -42,7 +46,7 @@ Using Docker Compose healthchecks ensures the app is up before NGINX starts prox
       timeout: 10s
       retries: 3
 
-2. Use Liveness & Readiness Probes (Kubernetes)
+### 2. Use Liveness & Readiness Probes (Kubernetes)
 -----------------------------------------------
     livenessProbe:
       httpGet:
@@ -58,7 +62,7 @@ And in the Node.js app:
 
     app.get('/health', (req, res) => res.sendStatus(200));
 
-3. Monitoring & Automation
+### 3. Monitoring & Automation
 --------------------------
 To catch and resolve issues earlier in production we could use:
 - Monitoring tools like Prometheus + Grafana
